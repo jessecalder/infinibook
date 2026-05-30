@@ -22,3 +22,22 @@ venv/
 # IDEs
 .vscode/
 .idea/
+
+# Home-directory repo exclusions
+.CFUserTextEncoding
+.cursor/
+.gitconfig
+.ssh/
+.warp/
+.zprofile
+.zsh_history
+.zsh_sessions/
+.Trash/
+Desktop/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
