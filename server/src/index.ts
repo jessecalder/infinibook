@@ -86,7 +86,11 @@ app.post("/api/books", requireAuth, async (req: AuthedRequest, res) => {
       hostId: req.user!.userId,
     },
   });
-  res.status(201).json(toBookResponse(book, null, 1));
+  res.status(201).json({
+    book: toBookResponse(book, null, 1),
+    chapters: [],
+    nextIndex: 1,
+  });
 });
 
 app.get("/api/books/:bookId", async (req, res) => {
