@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  chapters     Chapter[]
+  books        Book[]    @relation("BookHost")
+  claims       Book[]    @relation("BookClaimer")
+}
+
+model Book {
+  id          String       @id @default(cuid())
+  title       String
+  premise     String
+  genre       String
+  visibility  String       @default("public")
+  createdAt   DateTime     @default(now())
+  host        User         @relation("BookHost", fields: [hostId], references: [id])
+  hostId      String
+  claimer     User?        @relation("BookClaimer", fields: [claimerId], references: [id])
+  claimerId   String?
+  chapters    Chapter[]
+  bibleEntries BibleEntry[]
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  index       Int
+  title       String
+  body        String
+  state       String   @default("approved")
+  createdAt   DateTime @default(now())
+  approvedAt  DateTime?
+  reviewJson  String?
+  book        Book     @relation(fields: [bookId], references: [id])
+  bookId      String
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+model BibleEntry {
+  id           String @id @default(cuid())
+  type         String
+  name         String
+  detail       String
+  spoilerScope Int    @default(0)
+  book         Book   @relation(fields: [bookId], references: [id])
+  bookId       String
+}

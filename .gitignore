@@ -1,43 +1,4 @@
-# macOS
-.DS_Store
-
-# Logs
+node_modules
+dist
 *.log
-
-# Environment files
-.env
-.env.*
-
-# Node
-node_modules/
-dist/
-build/
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# IDEs
-.vscode/
-.idea/
-
-# Home-directory repo exclusions
-.CFUserTextEncoding
-.cursor/
-.gitconfig
-.ssh/
-.warp/
-.zprofile
-.zsh_history
-.zsh_sessions/
-.Trash/
-Desktop/
-Documents/
-Downloads/
-Library/
-Movies/
-Music/
-Pictures/
-Public/
+.DS_Store

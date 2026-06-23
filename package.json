@@ -1,0 +1,17 @@
+{
+  "name": "infinibook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prototype for Infinibook — a platform for writing a never-ending story together.",
+  "workspaces": ["server", "web"],
+  "scripts": {
+    "dev": "concurrently -n server,web -c green,cyan \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:web": "npm --workspace web run dev",
+    "typecheck": "npm --workspace server run typecheck && npm --workspace web run typecheck",
+    "build": "npm --workspace web run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
