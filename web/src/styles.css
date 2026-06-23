@@ -11,9 +11,33 @@
   --accent: #2f6f4f;       /* muted ember-forest green */
   --warn: #9a5b1d;
   --block: #9a2f2f;
+  --dim: #c2beb4;          /* focus-mode dimmed text */
+  --caret: #1fb6d6;        /* cyan writing caret */
+  --muse-ink: #c79a3a;     /* the Muse — warm, inspirational gold */
+  --editor-ink: #c0543c;   /* the Editor — proofreader's red */
+  --user-ink: #2f6abc;     /* the writer's own annotation ink */
   --mono: "iA Writer Mono", "JetBrains Mono", ui-monospace, SFMono-Regular,
     Menlo, Consolas, monospace;
   --serif: "iA Writer Quattro", Charter, "Iowan Old Style", Georgia, serif;
+  /* The active writing font — swapped by the font picker. */
+  --editor-font: "iA Writer Quattro", "IBM Plex Sans", Charter, Georgia, serif;
+}
+
+[data-theme="dark"] {
+  --ink: #ededeb;
+  --ink-soft: #a6a39c;
+  --ink-faint: #6e6b64;
+  --paper: #1a1a1a;
+  --paper-edge: #242422;
+  --rule: #343431;
+  --accent: #5fb98c;
+  --warn: #cc9352;
+  --block: #db6f6f;
+  --dim: #565550;
+  --caret: #1fb6d6;
+  --muse-ink: #e3bd63;
+  --editor-ink: #d98a72;
+  --user-ink: #6aa0e6;
 }
 
 * { box-sizing: border-box; }
@@ -29,6 +53,7 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .app {
@@ -108,24 +133,183 @@ hr.rule {
 }
 .writer input.title::placeholder { color: var(--ink-faint); }
 
-.writer textarea {
+/* The editor stacks layers over a transparent-background textarea:
+   - backdrop: visible text with the active paragraph sharp (focus mode only)
+   - caret-mirror: an invisible copy used only to locate the caret position
+   - custom-caret: a thick green caret we draw ourselves (the native one is
+     hidden because CSS can't set its width)
+   All layers share identical typography so they stay pixel-aligned. */
+.editor { position: relative; }
+
+.editor textarea,
+.editor .backdrop,
+.editor .caret-mirror,
+.editor .measure-layer {
   width: 100%;
-  min-height: 46vh;
-  border: 0;
-  background: transparent;
-  resize: vertical;
-  font-family: var(--serif);
+  font-family: var(--editor-font);
   font-size: 19px;
   line-height: 1.7;
+  letter-spacing: normal;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.editor .backdrop,
+.editor .caret-mirror,
+.editor .measure-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+}
+.editor .measure-layer { color: transparent; }
+.editor .backdrop { color: var(--dim); }
+.editor .backdrop .active { color: var(--ink); }
+.editor .caret-mirror { color: transparent; }
+
+.editor textarea {
+  position: relative;
+  display: block;
+  min-height: 46vh;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
   color: var(--ink);
   outline: none;
+  caret-color: transparent;        /* native caret hidden; .custom-caret replaces it */
 }
-.writer textarea::placeholder { color: var(--ink-faint); }
+.editor textarea.focus-on { color: transparent; }
+.editor textarea::placeholder { color: var(--ink-faint); }
 
-.writer.focusmode .chrome,
-.writer.focusmode .muse { opacity: 0.15; transition: opacity 0.3s; }
-.writer.focusmode:hover .chrome,
-.writer.focusmode:hover .muse { opacity: 1; }
+.custom-caret {
+  position: absolute;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 99px;             /* pill — rounded caps top and bottom */
+  pointer-events: none;
+  animation: caret-breathe 1.8s ease-in-out infinite;
+}
+/* A soft breath instead of a hard blink — fades fully out and back. */
+@keyframes caret-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* --- sketched marginalia ---
+   Suggestions drawn the way a reader annotates a book: underlines, circles and
+   brackets on the text itself, with handwritten notes in the margin connected
+   by arrows. The SVG strokes are wobbled by a displacement filter so clean
+   paths read as hand-drawn. */
+.marginalia-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2;
+}
+.marginalia-svg .anno path,
+.marginalia-svg .anno ellipse {
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.marginalia-svg .anno.muse path,
+.marginalia-svg .anno.muse ellipse { stroke: var(--muse-ink); }
+.marginalia-svg .anno.editor path,
+.marginalia-svg .anno.editor ellipse { stroke: var(--editor-ink); }
+.marginalia-svg .anno.user path,
+.marginalia-svg .anno.user ellipse { stroke: var(--user-ink); }
+.marginalia-svg .anno .connector { stroke-width: 1.2; opacity: 0.7; }
+.marginalia-svg .anno { transition: opacity 0.3s ease; }
+.marginalia-svg .anno.faded { opacity: 0; }
+
+.margin-notes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.mnote {
+  position: absolute;
+  width: 165px;
+  font-family: "Bradley Hand", "Marker Felt", "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 15px;
+  line-height: 1.35;
+  transform: rotate(-2.5deg);
+  z-index: 3;
+  transition: opacity 0.3s ease;
+}
+.mnote.muse { color: var(--muse-ink); }
+.mnote.editor { color: var(--editor-ink); }
+.mnote.user { color: var(--user-ink); }
+.mnote.general {
+  opacity: 0.9;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: rotate(-1.5deg);
+}
+.mnote.general:hover { filter: brightness(1.25); }
+.mnote.sp { width: auto; font-size: 13px; letter-spacing: 0.05em; }
+.mnote.left { text-align: right; }   /* left-margin notes hug the text column */
+.mnote.right { text-align: left; }
+.mnote.faded { opacity: 0; pointer-events: none; }
+
+/* editable user note */
+input.mnote {
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed var(--user-ink);
+  outline: none;
+  pointer-events: auto;
+  padding: 0 0 2px;
+}
+input.mnote::placeholder { color: var(--user-ink); opacity: 0.55; }
+
+/* Dim the sketches along with the rest of the page in focus mode; hovering the
+   editor brings them back. Transition on the base elements so it fades both ways. */
+.marginalia-svg,
+.margin-notes { transition: opacity 0.3s ease; }
+.app.focusmode .marginalia-svg,
+.app.focusmode .margin-notes { opacity: 0.12; }
+.app.focusmode .editor:hover .marginalia-svg,
+.app.focusmode .editor:hover .margin-notes { opacity: 1; }
+
+@media (max-width: 1200px) {
+  /* No room in the gutter on narrow screens — hide the sketches for now. */
+  .marginalia-svg,
+  .margin-notes { display: none; }
+}
+
+/* Focus mode: dim everything on the page except the current paragraph (kept
+   sharp inside the editor backdrop). Hover a region to bring it back.
+   The transition lives on the base elements so the fade is gradual in BOTH
+   directions — turning focus mode off animates back just like turning it on. */
+.masthead,
+.chapter,
+.rule,
+.writer .ch-head,
+.writer .title,
+.writer .chrome {
+  transition: opacity 0.3s ease;
+}
+.app.focusmode .masthead,
+.app.focusmode .chapter,
+.app.focusmode .rule,
+.app.focusmode .writer .ch-head,
+.app.focusmode .writer .title,
+.app.focusmode .writer .chrome {
+  opacity: 0.12;
+}
+.app.focusmode .masthead:hover,
+.app.focusmode .chapter:hover,
+.app.focusmode .writer .title:hover,
+.app.focusmode .writer .chrome:hover {
+  opacity: 1;
+}
 
 /* --- controls --- */
 .chrome {
@@ -173,34 +357,52 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .count { font-variant-numeric: tabular-nums; }
 
-/* --- muse panel --- */
-.muse {
-  margin-top: 28px;
-  padding: 18px 20px;
-  background: var(--paper-edge);
-  border-radius: 4px;
-}
-.muse .muse-head {
+.font-picker {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.muse ul { list-style: none; margin: 0; padding: 0; }
-.muse li {
-  font-size: 16px;
+  letter-spacing: 0.04em;
   color: var(--ink-soft);
-  padding: 8px 0;
-  border-top: 1px solid var(--rule);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 6px;
   cursor: pointer;
 }
-.muse li:first-child { border-top: 0; }
-.muse li:hover { color: var(--ink); }
+.font-picker:hover { border-color: var(--ink-soft); }
+
+/* --- annotate toolbar (the writer's own pen) --- */
+.annotate-bar {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: var(--paper-edge);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.16);
+}
+.annotate-bar button {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 5px 9px;
+  color: var(--user-ink);
+}
+.annotate-bar button:hover { border-color: var(--user-ink); background: none; }
+.annotate-bar .ann-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  padding: 0 6px;
+}
 
 /* --- review result --- */
 .review {
@@ -314,3 +516,44 @@ button:disabled { opacity: 0.4; cursor: default; }
 }
 .error { color: var(--block); }
 .center { text-align: center; color: var(--ink-faint); padding: 80px 0; }
+
+/* --- corner toggles (large, bold icon-only) --- */
+.corner-btn {
+  position: fixed;
+  top: 18px;
+  z-index: 20;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--ink-faint);
+  transition: color 0.15s, opacity 0.2s ease;
+}
+.corner-btn svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+.corner-btn:hover { color: var(--ink); }
+.theme-toggle { right: 16px; }
+.focus-toggle { right: 58px; }
+.muse-toggle { right: 100px; }
+.editor-toggle { right: 142px; }
+.annotate-toggle { right: 184px; }
+.focus-toggle.active { color: var(--accent); }
+.muse-toggle.active { color: var(--muse-ink); }
+.editor-toggle.active { color: var(--editor-ink); }
+.annotate-toggle.active { color: var(--user-ink); }
+
+/* --- dark-mode adjustments for the otherwise-hardcoded review panel --- */
+[data-theme="dark"] .review.approved .verdict { background: #1c2a22; }
+[data-theme="dark"] .review.returned .verdict { background: #2a221b; }
+[data-theme="dark"] .flag.info .tag { background: #2a2a28; }
+[data-theme="dark"] .flag.suggestion .tag { background: #1e2a22; }
+[data-theme="dark"] .flag.warning .tag { background: #2c2418; }
+[data-theme="dark"] .flag.block .tag { background: #2e1d1d; }
