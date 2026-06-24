@@ -80,6 +80,13 @@ export const api = {
   prompts: (bookId: string) =>
     fetch(`${base}/books/${bookId}/prompts`).then(json<{ prompts: MusePrompt[] }>),
 
+  muse: (bookId: string, suggestion: string, draft: string) =>
+    fetch(`${base}/books/${bookId}/muse/generate`, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...authHeaders() },
+      body: JSON.stringify({ suggestion, draft }),
+    }).then(json<{ text: string }>),
+
   submit: (bookId: string, payload: { title: string; body: string }) =>
     fetch(`${base}/books/${bookId}/submit`, {
       method: "POST",

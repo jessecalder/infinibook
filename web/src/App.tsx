@@ -45,15 +45,15 @@ function useFont() {
 }
 
 // ---------------------------------------------------------------------------
-// Bold line icons for the corner toggles. All inherit `currentColor` so the
-// active-state CSS can recolor them.
+// Corner-toggle icons (Tabler "Writerly" set). All inherit `currentColor` so
+// the active-state CSS can recolor them.
 // ---------------------------------------------------------------------------
-function Icon({ name }: { name: "sun" | "moon" | "magnifier" | "bulb" | "glasses" | "pen" }) {
+function Icon({ name }: { name: "sun" | "moon" | "target" | "sparkles" | "eyeglass" | "feather" | "notebook" }) {
   const p = {
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 2.2,
+    strokeWidth: 2,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
@@ -61,45 +61,55 @@ function Icon({ name }: { name: "sun" | "moon" | "magnifier" | "bulb" | "glasses
     case "sun":
       return (
         <svg {...p}>
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" />
+          <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+          <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
         </svg>
       );
     case "moon":
       return (
         <svg {...p}>
-          <path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" />
+          <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
         </svg>
       );
-    case "magnifier":
+    case "target":
       return (
         <svg {...p}>
-          <circle cx="10.5" cy="10.5" r="6" />
-          <line x1="20" y1="20" x2="15" y2="15" />
+          <path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+          <path d="M12 7a5 5 0 1 0 5 5" />
+          <path d="M13 3.055a9 9 0 1 0 7.941 7.945" />
+          <path d="M15 6v3h3l3 -3h-3v-3l-3 3" />
+          <path d="M15 9l-3 3" />
         </svg>
       );
-    case "bulb":
+    case "sparkles":
       return (
         <svg {...p}>
-          <path d="M12 2a7 7 0 0 0-4 12.6c.6.5.9 1 1 2.1h6c.1-1.1.4-1.6 1-2.1A7 7 0 0 0 12 2z" />
-          <line x1="9.5" y1="21" x2="14.5" y2="21" />
+          <path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6" />
         </svg>
       );
-    case "glasses":
+    case "eyeglass":
       return (
         <svg {...p}>
-          <circle cx="6" cy="14" r="3.3" />
-          <circle cx="18" cy="14" r="3.3" />
-          <path d="M9.3 13.4c.9-1.3 3.7-1.3 4.6 0" />
-          <path d="M2.7 12 4.2 8.2" />
-          <path d="M21.3 12 19.8 8.2" />
+          <path d="M8 4h-2l-3 10" />
+          <path d="M16 4h2l3 10" />
+          <path d="M10 16l4 0" />
+          <path d="M21 16.5a3.5 3.5 0 0 1 -7 0v-2.5h7v2.5" />
+          <path d="M10 16.5a3.5 3.5 0 0 1 -7 0v-2.5h7v2.5" />
         </svg>
       );
-    case "pen":
+    case "feather":
       return (
         <svg {...p}>
-          <path d="M5 19l2.6-.6L19 7l-2-2L5.6 16.4 5 19z" />
-          <line x1="14.5" y1="5.5" x2="16.5" y2="7.5" />
+          <path d="M4 20l10 -10m0 -5v5h5m-9 -1v5h5m-9 -1v5h5m-5 -5l4 -4l4 -4" />
+          <path d="M19 10c.638 -.636 1 -1.515 1 -2.486a3.515 3.515 0 0 0 -3.517 -3.514c-.97 0 -1.847 .367 -2.483 1m-3 13l4 -4l4 -4" />
+        </svg>
+      );
+    case "notebook":
+      return (
+        <svg {...p}>
+          <path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" />
+          <path d="M13 8l2 0" />
+          <path d="M13 12l2 0" />
         </svg>
       );
   }
@@ -139,22 +149,9 @@ interface Located {
   note: string;
 }
 
-// The Muse — creative nudges tied to the draft.
-function deriveMuse(text: string): Located[] {
-  const out: Located[] = [];
-  // Circle the last word as a thread to keep pulling (ignoring trailing
-  // punctuation / whitespace, so it still lands when a sentence is finished).
-  const last = /([A-Za-z'']+)[^A-Za-z'']*$/.exec(text);
-  if (last) {
-    out.push({
-      id: "thread",
-      kind: "circle",
-      range: [last.index, last.index + last[1].length],
-      note: "what does this unlock?",
-    });
-  }
-  return out;
-}
+// The Muse stays in the margin (its prompts), and deliberately does NOT mark up
+// the prose — marking the just-written word as you type is distracting. Marking
+// the text itself is the Editor's job.
 
 // The Editor — objective proofing of wording and structure.
 function deriveEditor(text: string): Located[] {
@@ -224,6 +221,14 @@ type Rect = { left: number; top: number; width: number; height: number };
 type Side = "left" | "right";
 type AnnoKind = "underline" | "circle" | "bracket" | "spelling" | "arrow" | "note";
 type AnnoSource = "muse" | "editor" | "user";
+
+// A passage the Muse generated and inserted into the draft.
+interface AiSegment {
+  id: string;
+  text: string;
+  hidden: boolean;
+  anchor?: number; // where to re-insert when un-hiding
+}
 
 // User-added annotation (stored in BookView, persisted per book).
 interface UserAnno {
@@ -306,10 +311,14 @@ function Marginalia({
   editorRef,
   value,
   prompts,
-  onUsePrompt,
+  onMuseGenerate,
+  busyPromptId,
   userAnnos,
   onChangeUserNote,
   onRemoveUserNote,
+  aiSegments,
+  onDiscardSegment,
+  onHideSegment,
   showMuse,
   showEditor,
   showUser,
@@ -318,10 +327,14 @@ function Marginalia({
   editorRef: RefObject<HTMLDivElement>;
   value: string;
   prompts: MusePrompt[];
-  onUsePrompt: (text: string) => void;
+  onMuseGenerate: (id: string, text: string) => void;
+  busyPromptId: string | null;
   userAnnos: UserAnno[];
   onChangeUserNote: (id: string, text: string) => void;
   onRemoveUserNote: (id: string) => void;
+  aiSegments: AiSegment[];
+  onDiscardSegment: (id: string) => void;
+  onHideSegment: (id: string) => void;
   showMuse: boolean;
   showEditor: boolean;
   showUser: boolean;
@@ -332,6 +345,8 @@ function Marginalia({
   const [placed, setPlaced] = useState<PlacedAnno[]>([]);
   const [freeNotes, setFreeNotes] =
     useState<Array<{ id: string; text: string; side: Side; x: number; y: number }>>([]);
+  const [aiPlaced, setAiPlaced] =
+    useState<Array<{ id: string; hidden: boolean; chip: Rect }>>([]);
 
   const compute = useCallback(() => {
     const editor = editorRef.current;
@@ -369,7 +384,6 @@ function Marginalia({
     const cursor: Record<Side, number> = { left: 0, right: 0 };
 
     const inputs: AnnoInput[] = [
-      ...deriveMuse(value).map((a) => ({ ...a, source: "muse" as const, text: a.note })),
       ...deriveEditor(value).map((a) => ({ ...a, source: "editor" as const, text: a.note })),
       ...findMisspellings(value).map((a) => ({ ...a, source: "editor" as const, text: a.note })),
       ...userAnnos.map((a) => ({
@@ -430,12 +444,40 @@ function Marginalia({
         return { id: p.id, text: p.text, side, x: noteXFor(side), y };
       })
     );
-  }, [value, prompts, userAnnos, editorRef]);
 
-  useLayoutEffect(() => { compute(); }, [compute]);
+    // Place each Muse passage's control chip: visible passages get a chip at the
+    // end of the text; hidden ones get a "show" pill at their stored anchor.
+    const aiOut: Array<{ id: string; hidden: boolean; chip: Rect }> = [];
+    let scan = 0;
+    for (const seg of aiSegments) {
+      if (seg.hidden) {
+        const a = Math.min(seg.anchor ?? value.length, value.length);
+        const rects = rectsFor(a, a);
+        if (rects.length) aiOut.push({ id: seg.id, hidden: true, chip: rects[0] });
+      } else {
+        const at = value.indexOf(seg.text, scan);
+        if (at < 0) continue; // edited away
+        scan = at + seg.text.length;
+        const rects = rectsFor(at, at + seg.text.length);
+        if (rects.length) aiOut.push({ id: seg.id, hidden: false, chip: rects[rects.length - 1] });
+      }
+    }
+    setAiPlaced(aiOut);
+  }, [value, prompts, userAnnos, aiSegments, editorRef]);
+
+  // Structural changes (mount, new prompts, the writer adding an annotation)
+  // recompute immediately; typing is debounced so marks settle once you pause
+  // instead of twitching on every keystroke.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => { compute(); }, [prompts, userAnnos, aiSegments]);
   useEffect(() => {
-    window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
+    const id = setTimeout(compute, 1200);
+    return () => clearTimeout(id);
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const onResize = () => compute();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, [compute]);
 
   const fadedFor = (source: AnnoSource) =>
@@ -494,17 +536,46 @@ function Marginalia({
             </div>
           );
         })}
-        {freeNotes.map((n) => (
-          <div
-            key={n.id}
-            className={`mnote muse general ${n.side} ${!showMuse ? "faded" : ""}`}
-            style={{ left: n.x, top: n.y }}
-            onClick={() => onUsePrompt(n.text)}
-            title={`${n.text} — click to use`}
-          >
-            {n.text.length > 72 ? `${n.text.slice(0, 72)}…` : n.text}
-          </div>
-        ))}
+        {freeNotes.map((n) => {
+          const busy = busyPromptId === n.id;
+          return (
+            <div
+              key={n.id}
+              className={`mnote muse general ephemeral ${n.side} ${!showMuse ? "faded" : ""} ${busy ? "busy" : ""}`}
+              style={{ left: n.x, top: n.y }}
+              onClick={() => !busy && onMuseGenerate(n.id, n.text)}
+              title={`${n.text} — click and the Muse will write it in`}
+            >
+              {busy ? "✦ weaving…" : n.text.length > 72 ? `${n.text.slice(0, 72)}…` : n.text}
+            </div>
+          );
+        })}
+      </div>
+      {/* Per-passage controls: hidden passages show a "show" pill at their anchor;
+          visible passages get hide/discard at the end of the text. */}
+      <div className="ai-chips">
+        {aiPlaced.map((a) =>
+          a.hidden ? (
+            <button
+              key={a.id}
+              className="ai-chip show-pill"
+              style={{ left: a.chip.left, top: a.chip.top }}
+              onClick={() => onHideSegment(a.id)}
+              title="Show the hidden Muse passage"
+            >
+              ✦ show
+            </button>
+          ) : (
+            <div
+              key={a.id}
+              className="ai-chip"
+              style={{ left: a.chip.left + a.chip.width, top: a.chip.top }}
+            >
+              <button onClick={() => onHideSegment(a.id)} title="Hide this passage">hide</button>
+              <button onClick={() => onDiscardSegment(a.id)} title="Discard this passage">✕</button>
+            </div>
+          )
+        )}
       </div>
     </>
   );
@@ -516,12 +587,16 @@ function FocusEditor({
   focusMode,
   placeholder,
   prompts,
-  onUsePrompt,
+  onMuseGenerate,
+  busyPromptId,
   showMuse,
   showEditor,
   userAnnos,
   onChangeUserNote,
   onRemoveUserNote,
+  aiSegments,
+  onDiscardSegment,
+  onHideSegment,
   showUser,
   annotateMode,
   onSelectionChange,
@@ -531,12 +606,16 @@ function FocusEditor({
   focusMode: boolean;
   placeholder?: string;
   prompts: MusePrompt[];
-  onUsePrompt: (text: string) => void;
+  onMuseGenerate: (id: string, text: string) => void;
+  busyPromptId: string | null;
   showMuse: boolean;
   showEditor: boolean;
   userAnnos: UserAnno[];
   onChangeUserNote: (id: string, text: string) => void;
   onRemoveUserNote: (id: string) => void;
+  aiSegments: AiSegment[];
+  onDiscardSegment: (id: string) => void;
+  onHideSegment: (id: string) => void;
   showUser: boolean;
   annotateMode: boolean;
   onSelectionChange: (start: number, end: number) => void;
@@ -591,16 +670,47 @@ function FocusEditor({
 
   const [start, end] = focusMode ? paragraphBounds(value, caret) : [0, value.length];
 
+  // Char ranges of the visible Muse-written passages, for gradient-colored text.
+  const aiRanges = useMemo(() => {
+    const out: Array<[number, number]> = [];
+    let scan = 0;
+    for (const seg of aiSegments) {
+      if (seg.hidden) continue;
+      const at = value.indexOf(seg.text, scan);
+      if (at < 0) continue;
+      scan = at + seg.text.length;
+      out.push([at, at + seg.text.length]);
+    }
+    return out;
+  }, [value, aiSegments]);
+
+  // The visible text is rendered here (the textarea itself is transparent), split
+  // into runs so AI passages get gradient glyphs and off-focus paragraphs dim.
+  const runs = useMemo(() => {
+    const pts = new Set<number>([0, value.length]);
+    if (focusMode) { pts.add(start); pts.add(end); }
+    for (const [s, e] of aiRanges) { pts.add(s); pts.add(e); }
+    const sorted = [...pts].filter((p) => p >= 0 && p <= value.length).sort((a, b) => a - b);
+    const out: Array<{ text: string; cls: string }> = [];
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const a = sorted[i], b = sorted[i + 1];
+      if (a === b) continue;
+      const ai = aiRanges.some(([s, e]) => a >= s && b <= e);
+      const dim = focusMode && !ai && (a < start || a >= end);
+      out.push({ text: value.slice(a, b), cls: ai ? "g" : dim ? "dim" : "ink" });
+    }
+    return out;
+  }, [value, focusMode, start, end, aiRanges]);
+
   return (
     <div className="editor" ref={editorRef}>
-      {focusMode && (
-        <div className="backdrop" aria-hidden="true">
-          {value.slice(0, start)}
-          <span className="active">{value.slice(start, end)}</span>
-          {value.slice(end)}
-          {"\n"}
-        </div>
-      )}
+      {/* Visible text layer (the textarea is transparent). */}
+      <div className="textview" aria-hidden="true">
+        {runs.map((r, i) => (
+          <span key={i} className={r.cls}>{r.text}</span>
+        ))}
+        {"\n"}
+      </div>
       {/* Invisible copy of the text used only to locate the caret pixel position. */}
       <div className="caret-mirror" aria-hidden="true">
         {value.slice(0, caret)}
@@ -610,7 +720,6 @@ function FocusEditor({
       </div>
       <textarea
         ref={ref}
-        className={focusMode ? "focus-on" : ""}
         value={value}
         placeholder={placeholder}
         spellCheck
@@ -637,10 +746,14 @@ function FocusEditor({
         editorRef={editorRef}
         value={value}
         prompts={prompts}
-        onUsePrompt={onUsePrompt}
+        onMuseGenerate={onMuseGenerate}
+        busyPromptId={busyPromptId}
         userAnnos={userAnnos}
         onChangeUserNote={onChangeUserNote}
         onRemoveUserNote={onRemoveUserNote}
+        aiSegments={aiSegments}
+        onDiscardSegment={onDiscardSegment}
+        onHideSegment={onHideSegment}
         showMuse={showMuse}
         showEditor={showEditor}
         showUser={showUser}
@@ -872,6 +985,46 @@ function ReviewResult({ review }: { review: AIReview }) {
 }
 
 // ---------------------------------------------------------------------------
+// Notes tray — a slide-out scratchpad, persisted per book.
+// ---------------------------------------------------------------------------
+function NotesTray({ bookId, open, onClose }: { bookId: string; open: boolean; onClose: () => void }) {
+  const key = `ib_notes_${bookId}`;
+  const [text, setText] = useState("");
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    try { setText(localStorage.getItem(key) || ""); } catch { setText(""); }
+  }, [key]);
+  useEffect(() => {
+    localStorage.setItem(key, text);
+  }, [key, text]);
+  // Close when clicking anywhere outside the tray (but not on its toggle button).
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      if (ref.current?.contains(t) || t.closest(".notes-toggle")) return;
+      onClose();
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open, onClose]);
+  return (
+    <aside ref={ref} className={`notes-tray ${open ? "open" : ""}`} aria-hidden={!open}>
+      <div className="notes-head">
+        <span>Notes</span>
+        <button className="notes-close" onClick={onClose} aria-label="Close notes">✕</button>
+      </div>
+      <textarea
+        className="notes-area"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Jot anything — names, threads, reminders. Saved automatically."
+      />
+    </aside>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Book view (reader + writer)
 // ---------------------------------------------------------------------------
 function BookView({
@@ -895,8 +1048,57 @@ function BookView({
   const [annotate, setAnnotate] = useState(false);
   const [userAnnos, setUserAnnos] = useState<UserAnno[]>([]);
   const [sel, setSel] = useState<[number, number]>([0, 0]);
+  const [aiSegments, setAiSegments] = useState<AiSegment[]>([]);
+  const [busyPromptId, setBusyPromptId] = useState<string | null>(null);
+  const [notesOpen, setNotesOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { fontId, setFontId } = useFont();
+
+  // Click a Muse idea → the Muse writes a short continuation and weaves it in.
+  async function runMuse(promptId: string, suggestion: string) {
+    if (busyPromptId) return;
+    setBusyPromptId(promptId);
+    try {
+      const { text } = await api.muse(bookId, suggestion, body);
+      const piece = text.trim();
+      if (piece) {
+        setBody((b) => (b ? `${b.replace(/\s+$/, "")}\n\n${piece}` : piece));
+        setAiSegments((segs) => [
+          ...segs,
+          { id: `ai-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, text: piece, hidden: false },
+        ]);
+      }
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusyPromptId(null);
+    }
+  }
+  function discardSegment(id: string) {
+    const seg = aiSegments.find((s) => s.id === id);
+    if (seg) {
+      // Remove the passage from the draft, tidying surrounding whitespace.
+      setBody((b) => b.replace(seg.text, "").replace(/\n{3,}/g, "\n\n").replace(/^\s+/, ""));
+    }
+    setAiSegments((segs) => segs.filter((s) => s.id !== id));
+  }
+  function hideSegment(id: string) {
+    const seg = aiSegments.find((s) => s.id === id);
+    if (!seg) return;
+    if (!seg.hidden) {
+      // Hide: pull the passage out of the draft, remembering where it sat.
+      const at = body.indexOf(seg.text);
+      if (at >= 0) setBody((b) => b.slice(0, at) + b.slice(at + seg.text.length));
+      setAiSegments((segs) =>
+        segs.map((s) => (s.id === id ? { ...s, hidden: true, anchor: at < 0 ? body.length : at } : s))
+      );
+    } else {
+      // Show: weave it back in at its anchor.
+      const at = Math.min(seg.anchor ?? body.length, body.length);
+      setBody((b) => b.slice(0, at) + seg.text + b.slice(at));
+      setAiSegments((segs) => segs.map((s) => (s.id === id ? { ...s, hidden: false } : s)));
+    }
+  }
 
   const wordCount = useMemo(
     () => (body.trim() ? body.trim().split(/\s+/).length : 0),
@@ -1012,6 +1214,7 @@ function BookView({
 
   return (
     <div className={`app ${isClaimer && focus ? "focusmode" : ""}`}>
+      <NotesTray bookId={bookId} open={notesOpen} onClose={() => setNotesOpen(false)} />
       <header className="masthead">
         <div className="brand" style={{ display: "flex", justifyContent: "space-between" }}>
           <span
@@ -1065,7 +1268,7 @@ function BookView({
             aria-label="Toggle focus mode"
             aria-pressed={focus}
           >
-            <Icon name="magnifier" />
+            <Icon name="target" />
           </button>
           <button
             className={`corner-btn muse-toggle ${showMuse ? "active" : ""}`}
@@ -1074,7 +1277,7 @@ function BookView({
             aria-label="Toggle the Muse"
             aria-pressed={showMuse}
           >
-            <Icon name="bulb" />
+            <Icon name="sparkles" />
           </button>
           <button
             className={`corner-btn editor-toggle ${showEditor ? "active" : ""}`}
@@ -1083,7 +1286,7 @@ function BookView({
             aria-label="Toggle the Editor"
             aria-pressed={showEditor}
           >
-            <Icon name="glasses" />
+            <Icon name="eyeglass" />
           </button>
           <button
             className={`corner-btn annotate-toggle ${annotate ? "active" : ""}`}
@@ -1092,7 +1295,16 @@ function BookView({
             aria-label="Toggle your annotations"
             aria-pressed={annotate}
           >
-            <Icon name="pen" />
+            <Icon name="feather" />
+          </button>
+          <button
+            className={`corner-btn notes-toggle ${notesOpen ? "active" : ""}`}
+            onClick={() => setNotesOpen((n) => !n)}
+            title={`Notes: ${notesOpen ? "open" : "closed"}`}
+            aria-label="Toggle notes tray"
+            aria-pressed={notesOpen}
+          >
+            <Icon name="notebook" />
           </button>
           <div className="ch-head" style={{ marginBottom: 12 }}>
             Chapter {nextIndex} · writing as {username}
@@ -1109,12 +1321,16 @@ function BookView({
             focusMode={focus}
             placeholder="Begin where the story left off…"
             prompts={prompts}
-            onUsePrompt={(t) => setBody((b) => (b ? b + "\n\n" : "") + `> ${t}\n\n`)}
+            onMuseGenerate={runMuse}
+            busyPromptId={busyPromptId}
             showMuse={showMuse}
             showEditor={showEditor}
             userAnnos={userAnnos}
             onChangeUserNote={changeUserNote}
             onRemoveUserNote={removeUserNote}
+            aiSegments={aiSegments}
+            onDiscardSegment={discardSegment}
+            onHideSegment={hideSegment}
             showUser={annotate}
             annotateMode={annotate}
             onSelectionChange={(s, e) => setSel([s, e])}

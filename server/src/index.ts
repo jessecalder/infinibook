@@ -6,6 +6,7 @@ import { prisma } from "./db.js";
 import { signToken, parseAuth, requireAuth } from "./auth.js";
 import type { AuthedRequest } from "./auth.js";
 import { reviewChapter, musePrompts } from "./ai/mockAI.js";
+import { generateMuseContinuation } from "./ai/muse.js";
 import type { BibleEntry } from "./types.js";
 
 const app = express();
@@ -155,6 +156,35 @@ app.get("/api/books/:bookId/prompts", async (req, res) => {
   const chapters = await prisma.chapter.count({ where: { bookId: book.id, state: "approved" } });
   const entries = await prisma.bibleEntry.findMany({ where: { bookId: book.id } });
   res.json({ prompts: musePrompts(entries as BibleEntry[], chapters) });
+});
+
+// Execute a Muse suggestion -> generate a short continuation (Claude, or mock).
+app.post("/api/books/:bookId/muse/generate", requireAuth, async (req, res) => {
+  const book = await prisma.book.findUnique({ where: { id: req.params.bookId } });
+  if (!book) return res.status(404).json({ error: "Book not found" });
+
+  const suggestion = (req.body?.suggestion || "").toString().trim();
+  if (!suggestion) return res.status(400).json({ error: "suggestion required" });
+  const draft = (req.body?.draft || "").toString();
+
+  const approved = await prisma.chapter.findMany({
+    where: { bookId: book.id, state: "approved" },
+    orderBy: { index: "asc" },
+  });
+  const canon = approved.map((c) => `${c.title}\n${c.body}`).join("\n\n");
+
+  try {
+    const text = await generateMuseContinuation({
+      premise: book.premise,
+      genre: book.genre,
+      canon,
+      draft,
+      suggestion,
+    });
+    res.json({ text });
+  } catch (err) {
+    res.status(502).json({ error: `Muse failed: ${(err as Error).message}` });
+  }
 });
 
 // ---------------------------------------------------------------------------
