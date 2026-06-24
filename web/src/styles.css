@@ -133,16 +133,16 @@ hr.rule {
 }
 .writer input.title::placeholder { color: var(--ink-faint); }
 
-/* The editor stacks layers over a transparent-background textarea:
-   - backdrop: visible text with the active paragraph sharp (focus mode only)
+/* The editor stacks layers over a transparent textarea:
+   - textview: the VISIBLE text — runs are dimmed (off-focus) or gradient (Muse)
    - caret-mirror: an invisible copy used only to locate the caret position
-   - custom-caret: a thick green caret we draw ourselves (the native one is
-     hidden because CSS can't set its width)
+   - measure-layer: an invisible copy used to measure annotation ranges
+   - custom-caret: a thick green caret we draw ourselves
    All layers share identical typography so they stay pixel-aligned. */
 .editor { position: relative; }
 
 .editor textarea,
-.editor .backdrop,
+.editor .textview,
 .editor .caret-mirror,
 .editor .measure-layer {
   width: 100%;
@@ -157,7 +157,7 @@ hr.rule {
   overflow-wrap: break-word;
 }
 
-.editor .backdrop,
+.editor .textview,
 .editor .caret-mirror,
 .editor .measure-layer {
   position: absolute;
@@ -167,9 +167,17 @@ hr.rule {
   overflow: hidden;
 }
 .editor .measure-layer { color: transparent; }
-.editor .backdrop { color: var(--dim); }
-.editor .backdrop .active { color: var(--ink); }
 .editor .caret-mirror { color: transparent; }
+
+/* Visible text runs. */
+.editor .textview .ink { color: var(--ink); }
+.editor .textview .dim { color: var(--dim); transition: color 0.3s ease; }
+.editor .textview .g {
+  background-image: linear-gradient(90deg, var(--muse-ink), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 .editor textarea {
   position: relative;
@@ -178,11 +186,10 @@ hr.rule {
   resize: none;
   overflow: hidden;
   background: transparent;
-  color: var(--ink);
+  color: transparent;              /* the textview renders the visible text */
   outline: none;
   caret-color: transparent;        /* native caret hidden; .custom-caret replaces it */
 }
-.editor textarea.focus-on { color: transparent; }
 .editor textarea::placeholder { color: var(--ink-faint); }
 
 .custom-caret {
@@ -404,6 +411,96 @@ button:disabled { opacity: 0.4; cursor: default; }
   padding: 0 6px;
 }
 
+/* --- Muse-written passages: per-passage controls (gradient text lives in the
+   editor's text layer; these are just the hide / discard / show chips). --- */
+.ai-chips { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.ai-chip {
+  position: absolute;
+  display: flex;
+  gap: 4px;
+  transform: translate(8px, -3px);
+  pointer-events: auto;
+}
+.ai-chip button,
+button.ai-chip.show-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--ink-faint);
+  background: var(--paper-edge);
+}
+.ai-chip button:hover,
+button.ai-chip.show-pill:hover { color: var(--ink); border-color: var(--ink-soft); }
+button.ai-chip.show-pill { color: var(--muse-ink); border-color: var(--muse-ink); }
+
+/* Muse ideas breathe in, then fade away if untouched (hover keeps them). */
+.mnote.ephemeral {
+  animation: muse-life 18s ease forwards;
+}
+.mnote.ephemeral:hover { animation-play-state: paused; }
+.mnote.ephemeral.busy { animation: none; opacity: 1; font-style: italic; }
+@keyframes muse-life {
+  0% { opacity: 0; }
+  6% { opacity: 0.9; }
+  82% { opacity: 0.9; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+/* --- notes tray --- */
+.notes-tray {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  width: 320px;
+  max-width: 86vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-edge);
+  border-left: 1px solid var(--rule);
+  box-shadow: -8px 0 28px rgba(0, 0, 0, 0.16);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
+}
+.notes-tray.open { transform: translateX(0); }
+.notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.notes-close {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+.notes-close:hover { color: var(--ink); }
+.notes-area {
+  flex: 1;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 0 20px 20px;
+}
+.notes-area::placeholder { color: var(--ink-faint); }
+
 /* --- review result --- */
 .review {
   margin-top: 28px;
@@ -539,16 +636,15 @@ button:disabled { opacity: 0.4; cursor: default; }
   height: 28px;
   display: block;
 }
-.corner-btn:hover { color: var(--ink); }
+/* Subdued, uniform on/off: faint when off, full ink when on. */
+.corner-btn:hover { color: var(--ink-soft); }
+.corner-btn.active { color: var(--ink); }
 .theme-toggle { right: 16px; }
 .focus-toggle { right: 58px; }
 .muse-toggle { right: 100px; }
 .editor-toggle { right: 142px; }
 .annotate-toggle { right: 184px; }
-.focus-toggle.active { color: var(--accent); }
-.muse-toggle.active { color: var(--muse-ink); }
-.editor-toggle.active { color: var(--editor-ink); }
-.annotate-toggle.active { color: var(--user-ink); }
+.notes-toggle { right: 226px; }
 
 /* --- dark-mode adjustments for the otherwise-hardcoded review panel --- */
 [data-theme="dark"] .review.approved .verdict { background: #1c2a22; }
